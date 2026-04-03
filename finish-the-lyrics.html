@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Habis Lirik Raya KBC🎵</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --gold: #d4a843;
+    --green: #1a5c2e;
+    --cream: #fdf6e3;
+    --dark: #1a1208;
+    --accent: #e8621a;
+    --light-green: #2d8c4e;
+    --bg: #0d2e18;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--cream);
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(212,168,67,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(45,140,78,0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 60% 80%, rgba(212,168,67,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lantern {
+    position: fixed;
+    font-size: 2rem;
+    animation: float linear infinite;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.6;
+  }
+  @keyframes float {
+    0%   { transform: translateY(110vh) rotate(-10deg); opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-10vh) rotate(10deg); opacity: 0; }
+  }
+
+  .container {
+    position: relative;
+    z-index: 10;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  /* HEADER */
+  header { text-align: center; margin-bottom: 2.5rem; }
+  .header-ornament {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+    animation: sway 3s ease-in-out infinite;
+  }
+  @keyframes sway { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 40px rgba(212,168,67,0.4);
+    line-height: 1.1;
+  }
+  .subtitle {
+    font-size: 1rem;
+    color: rgba(253,246,227,0.6);
+    margin-top: 0.5rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* SONG LIST */
+  #song-list-screen { animation: fadeUp 0.6s ease both; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  /* .song-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.9rem;
+    margin-bottom: 2rem;
+  } */
+
+  .song-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 👈 smaller min size */
+  gap: 0.9rem;
+  margin-bottom: 2rem;
+  }
+
+  .song-card {
+    background: rgba(253,246,227,0.05);
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 14px;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .song-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(212,168,67,0.08), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .song-card:hover { transform: translateY(-4px); border-color: var(--gold); box-shadow: 0 8px 30px rgba(212,168,67,0.15); }
+  .song-card:hover::before { opacity: 1; }
+  .song-card.selected { border-color: var(--gold); background: rgba(212,168,67,0.12); }
+
+  .song-emoji  { font-size: 1.6rem; margin-bottom: 0.4rem; display: block; }
+  .song-title  { font-weight: 700; font-size: 0.95rem; color: var(--cream); line-height: 1.3; }
+  .song-artist { font-size: 0.8rem; color: rgba(253,246,227,0.5); margin-top: 0.2rem; }
+  .song-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 20px;
+    margin-top: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .tag-raya      { background: rgba(212,168,67,0.2); color: var(--gold); }
+  .tag-nostalgia { background: rgba(232,98,26,0.2);  color: #f09060; }
+  .tag-baru      { background: rgba(64, 203, 224, 0.06); color: aquamarine;}
+
+  /* SHUFFLE BUTTON */
+  .btn-shuffle {
+    display: block;
+    width: 100%;
+    padding: 1.1rem 2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--dark);
+    background: linear-gradient(135deg, var(--gold), #e8c060);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 30px rgba(212,168,67,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-shuffle::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+  .btn-shuffle:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(212,168,67,0.4); }
+  .btn-shuffle:hover::after { transform: translateX(100%); }
+  .btn-shuffle:active { transform: translateY(0); }
+  .btn-shuffle.spinning .btn-icon { display: inline-block; animation: spin 0.5s ease; }
+  @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(720deg)} }
+  .btn-icon { display: inline-block; margin-right: 0.5rem; }
+
+  /* GAME SCREEN */
+  #game-screen { display: none; animation: fadeUp 0.5s ease both; }
+
+  .now-playing {
+    background: linear-gradient(135deg, rgba(212,168,67,0.1), rgba(45,140,78,0.1));
+    border: 1px solid rgba(212,168,67,0.3);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .album-art {
+    width: 80px; height: 80px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--green), var(--light-green));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem;
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(212,168,67,0.2);
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 20px rgba(212,168,67,0.2); }
+    50% { box-shadow: 0 0 35px rgba(212,168,67,0.4); }
+  }
+
+  .track-info .track-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .track-info .track-artist { color: rgba(253,246,227,0.6); font-size: 0.9rem; margin-top: 0.2rem; }
+
+  /* Audio bar */
+  .audio-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(212,168,67,0.07);
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 50px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1.2rem;
+  }
+  .audio-bar .music-note { font-size: 1.2rem; animation: noteBounce 0.6s ease infinite alternate; }
+  @keyframes noteBounce { from{transform:translateY(0)} to{transform:translateY(-5px)} }
+  .audio-bar span { font-size: 0.82rem; color: rgba(253,246,227,0.55); }
+  .audio-bar strong { color: var(--gold); font-size: 0.85rem; }
+  .volume-wrap { margin-left: auto; display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; }
+  .volume-wrap input[type=range] {
+    -webkit-appearance: none;
+    width: 70px; height: 4px;
+    border-radius: 2px;
+    background: rgba(212,168,67,0.3);
+    outline: none;
+    cursor: pointer;
+  }
+  .volume-wrap input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+  }
+
+  /* LYRICS */
+  .lyrics-box {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(253,246,227,0.08);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    min-height: 220px;
+    position: relative;
+  }
+
+  .phase-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    margin-bottom: 1.2rem;
+  }
+  .phase-label.show { background: rgba(45,140,78,0.25);  color: #6ddb8e;     border: 1px solid rgba(45,140,78,0.3); }
+  .phase-label.hide { background: rgba(232,98,26,0.2);   color: #f09060;     border: 1px solid rgba(232,98,26,0.3); }
+  .phase-label.revealed { background: rgba(212,168,67,0.15); color: var(--gold); border: 1px solid rgba(212,168,67,0.3); }
+  .phase-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .lyric-line {
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: var(--cream);
+    animation: lyricFadeIn 0.5s ease both;
+  }
+  @keyframes lyricFadeIn { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
+
+  .lyric-blank {
+    display: inline-block;
+    min-width: 120px;
+    height: 1.5rem;
+    background: linear-gradient(90deg, rgba(212,168,67,0.15), rgba(212,168,67,0.3), rgba(212,168,67,0.15));
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin: 0 0.2rem;
+  }
+  .lyric-blank.long { min-width: 200px; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* Sing prompt */
+  .sing-prompt {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(212,168,67,0.08);
+    border-radius: 14px;
+    border: 1px dashed rgba(212,168,67,0.3);
+    margin-top: 1rem;
+    display: none;
+  }
+  .sing-prompt.visible { display: block; animation: fadeIn 0.5s ease; }
+  .sing-prompt .mic { font-size: 2rem; animation: micBounce 0.5s ease infinite alternate; }
+  @keyframes micBounce { from{transform:translateY(0)} to{transform:translateY(-6px)} }
+  .sing-prompt p { font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-top: 0.5rem; }
+  .sing-prompt small { color: rgba(253,246,227,0.5); font-size: 0.85rem; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  /* CONTROLS */
+  .controls { display: flex; gap: 0.7rem; margin-top: 1.5rem; flex-wrap: wrap; }
+  .btn-secondary {
+    flex: 1;
+    padding: 0.9rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: 50px;
+    border: 1.5px solid rgba(212,168,67,0.4);
+    background: transparent;
+    color: var(--gold);
+    cursor: pointer;
+    transition: all 0.25s;
+    min-width: 80px;
+  }
+  .btn-secondary:hover:not(:disabled) { background: rgba(212,168,67,0.1); border-color: var(--gold); }
+  .btn-secondary:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-primary {
+    flex: 2;
+    padding: 0.9rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: 50px;
+    border: none;
+    background: linear-gradient(135deg, var(--gold), #e8c060);
+    color: var(--dark);
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(212,168,67,0.2);
+    min-width: 100px;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212,168,67,0.35); }
+
+  .selected-banner { text-align: center; font-size: 0.85rem; color: rgba(253,246,227,0.5); margin-bottom: 1rem; }
+  .selected-banner strong { color: var(--gold); }
+
+  /* COUNTDOWN OVERLAY */
+  .countdown-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(13,46,24,0.93);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+  }
+  .countdown-overlay.visible { display: flex; }
+  .countdown-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 9rem;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 60px rgba(212,168,67,0.6);
+    animation: countPop 1s ease forwards;
+  }
+  .countdown-song-name {
+    font-size: 1.1rem;
+    color: rgba(253,246,227,0.75);
+    margin-top: 0.5rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 0 2rem;
+  }
+  .countdown-label {
+    font-size: 0.95rem;
+    color: rgba(253,246,227,0.4);
+    margin-top: 0.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  @keyframes countPop {
+    0% { transform: scale(1.6); opacity: 0; }
+    25% { transform: scale(1);   opacity: 1; }
+    75% { transform: scale(1);   opacity: 1; }
+    100% { transform: scale(0.4); opacity: 0; }
+  }
+
+  /* STARS & NOTES */
+  .stars-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 100; display: none; }
+  .star-particle {
+    position: absolute;
+    font-size: 1.5rem;
+    animation: starFall 2.5s ease forwards;
+  }
+  @keyframes starFall {
+    0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(60px) scale(0.3) rotate(180deg); }
+  }
+  .note-float {
+    position: fixed;
+    font-size: 1.8rem;
+    pointer-events: none;
+    z-index: 99;
+    animation: noteRise 3s ease forwards;
+    opacity: 0;
+  }
+  @keyframes noteRise {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-150px) scale(0.5); }
+  }
+</style>
+</head>
+<body>
+
+<div class="lantern" style="left:88%;animation-duration:16s;animation-delay:5s;">🌟</div>
+<div class="lantern" style="left:10%;animation-duration:12s;animation-delay:0s;">🏮</div>
+<div class="lantern" style="left:30%;animation-duration:15s;animation-delay:3s;">🌙</div>
+<div class="lantern" style="left:55%;animation-duration:18s;animation-delay:7s;">⭐</div>
+<div class="lantern" style="left:75%;animation-duration:13s;animation-delay:1s;">🏮</div>
+<div class="lantern" style="left:88%;animation-duration:16s;animation-delay:5s;">🌟</div>
+
+<div class="stars-overlay" id="starsOverlay"></div>
+
+<!-- Countdown Overlay -->
+<div class="countdown-overlay" id="countdownOverlay">
+  <div class="countdown-number" id="countdownNumber">3</div>
+  <div class="countdown-song-name" id="countdownSongName"></div>
+  <div class="countdown-label">Get Ready to Sing! 🎤</div>
+</div>
+
+<!-- Hidden MP3 player -->
+<audio id="audioPlayer" preload="auto"></audio>
+
+<div class="container">
+  <header>
+    <span class="header-ornament">🎵</span>
+    <h1>KBC Raya Habis Lirik!</h1>
+    <p class="subtitle">Sing Along · Guess the Lyrics</p>
+  </header>
+
+  <!-- SONG LIST -->
+  <div id="song-list-screen">
+    <p class="section-title">🎶 Song Library</p>
+    <div class="song-grid" id="songGrid"></div>
+    <div class="selected-banner" id="selectedBanner" style="display:none">
+      Selected: <strong id="selectedName">—</strong>
+    </div>
+    <button class="btn-shuffle" id="shuffleBtn" onclick="shuffleSong()">
+      <span class="btn-icon">🔀</span> Shuffle & Play!
+    </button>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="game-screen">
+    <div class="now-playing">
+      <div class="album-art" id="albumEmoji">🎵</div>
+      <div class="track-info">
+        <div class="track-title"  id="trackTitle">—</div>
+        <div class="track-artist" id="trackArtist">—</div>
+      </div>
+    </div>
+
+    <!-- Audio status + volume -->
+    <div class="audio-bar">
+      <span class="music-note">🎵</span>
+      <span>Now playing: <strong id="audioStatus">—</strong></span>
+      <div class="volume-wrap">
+        🔊
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="1"
+               oninput="document.getElementById('audioPlayer').volume = this.value">
+      </div>
+    </div>
+
+    <div class="lyrics-box">
+      <div class="phase-label show" id="phaseLabel">
+        <span class="phase-dot"></span> Lyrics Shown
+      </div>
+      <div id="lyricsDisplay"></div>
+      <div class="sing-prompt" id="singPrompt">
+        <div class="mic">🎤</div>
+        <p>Now YOU sing it!</p>
+        <small>Can you remember the rest of the lyrics?</small>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn-secondary" onclick="backToList()">↩ Back</button>
+      <button class="btn-secondary" id="revealBtn" onclick="revealLyrics()" disabled>👀 Reveal</button>
+      <button class="btn-primary" onclick="replayGame()">🔁 Replay</button>
+      <button class="btn-primary" onclick="nextSong()">Next Song ▶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SONGS = [
+  {
+    title: "Menjelang Hari Raya",
+    artist: "DJ Dave",
+    emoji: "🧨",
+    tag: "raya",
+    audio: "menjelang-hari-raya.mp3",
+    lyrics: [
+      { line: "Ohh cantik berseri-seri", show: true },
+      { line: "Tua dan muda berpakaian serba baru", show: true },
+      { line: "Oh sungguh meriahnya", show: false, blank: true },
+      { line: "Miskin kaya pun turut bergembira", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Selamat Hari Raya",
+    artist: "Fazidah Joned",
+    emoji: "🌸",
+    tag: "raya",
+    audio: "selamat-hari-raya-fazidah-joned.mp3",
+    lyrics: [
+      { line: "Semoga kita berjumpa lagi", show: true },
+      { line: "Di hari bahagia ini", show: true },
+      { line: "Mari teman, mari saudara", show: true },
+      { line: "Kita bergembira", show: false, blank: true },
+      { line: "Lupakanlah hatimu yang duka", show: false, blank: true },
+      { line: "Selamat, Selamat Hari Raya", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Pejam Celik Hari Raya",
+    artist: "Iman Troye",
+    emoji: ".",
+    tag: "baru",
+    audio: "pejam-celik-hari-raya.mp3",
+    audio2: "pejam-celik-hari-raya-ans.mp3",
+    lyrics: [
+      { line: "Bermaaf-maafan sesama insan", show: true },
+      { line: "Suburkan kasih dan sayang", show: true },
+      { line: "Hargailah masa kerna ia kurniaan-Nya", show: false, blank: true },
+      { line: "Marilah semua kita dendangkan salam lebaran", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Bila Takbir Bergema",
+    artist: "Rafeah Buang",
+    emoji: "🎆",
+    tag: "raya",
+    audio: "bila-takbir-bergema.mp3",
+    lyrics: [
+      { line: "Dengar-dengar itu bedok telah berbunyi", show: true },
+      { line: "Sebulan puasa tamatlah hari ini", show: true },
+      { line: "Lekaslah adikku hiaskan rumahmu", show: true },
+      { line: "Biar serba baru untuk para tamu", show: true },
+      { line: "Jangan kau lupa ketupat di dapur", show: false, blank: true },
+      { line: "Rendang di kuali jangan biar hangus", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Satu Hari Di Hari Raya",
+    artist: "Dato' M. Nasir",
+    emoji: "🎉",
+    tag: "raya",
+    audio: "satu-hari-di-hari-raya.mp3",
+    lyrics: [
+      { line: "Satu hari di hari raya", show: true },
+      { line: "Kudengar irama yang sungguh indah", show: true },
+      { line: "Kucuba mendekati padanya", show: true },
+      { line: "Kira irama itu adalah", show: false, blank: true },
+      { line: "Suara pujian pada Yang Esa", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Jom Raya",
+    artist: "Daiyan Trisha ft. Alfie Zumi",
+    emoji: ".",
+    tag: "baru",
+    audio: "jom-raya.mp3",
+    audio2: "jom-raya-ans.mp3",
+    lyrics: [
+      { line: "Jom, jom, jom, jom, jom", show: true },
+      { line: "Raya dengan saya, sudah lama tak berjumpa", show: true },
+      { line: "Kampung belah mana?", show: true },
+      { line: "Baju raya awak warna apa?", show: true },
+      { line: "Nyalakan pelita, hari untuk kita bahagia", show: false, blank: true },
+      { line: "Raya dengan saya, Syawal kali ini kita berdua", show: false, blank: true },
+      { line: "Jomlah beraya", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Selamat Hari Raya",
+    artist: "Ahmad Jais",
+    emoji: "🔆",
+    tag: "nostalgia",
+    audio: "selamat-hari-raya-ahmad-jais.mp3",
+    lyrics: [
+      { line: "Selamat Hari Raya", show: true },
+      { line: "Aidilfitri mulia", show: true },
+      { line: "Ampun maaf dipinta", show: true },
+      { line: "Mensuci hening dosa", show: true },
+      { line: "Setahun menghilang", show: false, blank: true },
+      { line: "Sekarang menjelang", show: false, blank: true },
+      { line: "Hari yang bahagia", show: false, blank: true },
+      { line: "Selamat Hari Raya", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Selamat Hari Raya",
+    artist: "Saloma",
+    emoji: "🎊",
+    tag: "nostalgia",
+    audio: "selamat-hari-raya-saloma.mp3",
+    lyrics: [
+      { line: "Selamat Hari Raya", show: true },
+      { line: "Hari untuk kita bersuka ria", show: true },
+      { line: "Selamat kami ucapkan", show: false, blank: true },
+      { line: "Untuk kita hingga sampai tahun depan", show: false, blank: true },
+      { line: "Selamat Hari Raya", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Nyam Nyam Ketupat",
+    artist: "Zizan Razak, Wani Kayrie, Dinda",
+    emoji: ".",
+    tag: "baru",
+    audio: "nyam-nyam-ketupat.mp3",
+    audio2: "nyam-nyam-ketupat-ans.mp3",
+    lyrics: [
+      { line: "Puas berpuasa sepurnama", show: true },
+      { line: "Menantikan hari yang mulia", show: true },
+      { line: "Usahlah resah ukuran pinggang", show: false, blank: true },
+      { line: "Makanlah, makan berpinggan-pinggan", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Warna Warni Aidilfitri",
+    artist: "Nyanyian Ramai",
+    emoji: "🥗",
+    tag: "nostalgia",
+    audio: "warna-warni-aidilfitri.mp3",
+    lyrics: [
+      { line: "Dulang berkait sulaman tangan", show: true },
+      { line: "Buang jerami berikat rotan", show: true },
+      { line: "Dulang berkait sulaman tangan", show: true },
+      { line: "Buang jerami berikat rotan", show: true },
+      { line: "Sama lah cantik sama lah padan", show: false, blank: true },
+      { line: "Bertambah seri dengan senyuman", show: false, blank: true },
+      { line: "Sama lah cantik sama lah padan", show: false, blank: true },
+      { line: "Bertambah seri dengan senyuman", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Dari Jauh Kupohon Maaf",
+    artist: "Dato' Sudirman Hj. Arshad",
+    emoji: "🙇‍♂️",
+    tag: "raya",
+    audio: "dari-jauh-ku-pohon-maaf.mp3",
+    lyrics: [
+      { line: "Hanya kusampaikan doa dan kiriman tulus ikhlas", show: true },
+      { line: "Dari jauh kupohonkan ampun maaf", show: true },
+      { line: "Jangan sedih pagi ini tak dapat kita bersama", show: true },
+      { line: "Meraikan Aidilfitri yang mulia", show: true },
+      { line: "Restu ayah bonda kuharap selalu", show: false, blank: true },
+      { line: "Hingga aku pulang kepadamu", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Alamak Raya Lagi",
+    artist: "De FAM",
+    emoji: ".",
+    tag: "baru",
+    audio: "alamak-raya-lagi.mp3",
+    audio2: "alamak-raya-lagi-ans.mp3",
+    lyrics: [
+      { line: "Petang-petang semua happy", show: true },
+      { line: "Hanya aku yang sendiri", show: true },
+      { line: "Bila nak tengok story IG", show: true },
+      { line: "Tapi wi-fi macam ba-", show: false, blank: true },
+      { line: "Bila tiba hari raya", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Senandung Hari Raya Untukmu",
+    artist: "Dayangku Intan",
+    emoji: "🎤",
+    tag: "raya",
+    audio: "senandung-hari-raya-untukmu.mp3",
+    lyrics: [
+      { line: "Dengarlah sayang, lagu untukmu pengganti diriku", show: true },
+      { line: "Semoga kau akan terhibur selalu", show: true },
+      { line: "Di dalam suasana hari raya", show: false, blank: true },
+      { line: "Terimalah dengan rasa bangga", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Dendang Perantau",
+    artist: "Tan Sri P. Ramlee",
+    emoji: "💛",
+    tag: "nostalgia",
+    audio: "dendang-perantau.mp3",
+    lyrics: [
+      { line: "Impian yang murni", show: true },
+      { line: "Tinggal menjadi kenang-kenanganku", show: true },
+      { line: "Hanya rangkaian kata dengan lagu", show: false, blank: true },
+      { line: "Dendang Perantau", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Jodoh Lebaran",
+    artist: "Aishah Retno",
+    emoji: ".",
+    tag: "baru",
+    audio: "jodoh-lebaran.mp3",
+    audio2: "jodoh-lebaran-ans.mp3",
+    lyrics: [
+      { line: "Hati-hati balik raya", show: true },
+      { line: "Kumbang bunga jaga-jaga", show: true },
+      { line: "Lebaran dengan si dia", show: false, blank: true },
+      { line: "Kalau jodoh tak ke mana", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Indahnya Beraya Di Desa",
+    artist: "Azlina Aziz",
+    emoji: "🛣️",
+    tag: "raya",
+    audio: "indahnya-beraya-di-desa.mp3",
+    lyrics: [
+      { line: "Indahnya beraya di desa", show: true },
+      { line: "Kaya dan miskin sama meraikan", show: true },
+      { line: "Mengikut kemampuan diri sendiri", show: false, blank: true },
+      { line: "Bergembira", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Selamat Berhari Raya",
+    artist: "Rahimah Rahim",
+    emoji: "👨‍👩‍👧‍👦",
+    tag: "raya",
+    audio: "selamat-berhari-raya.mp3",
+    lyrics: [
+      { line: "Dalam kita bergembira", show: true },
+      { line: "Pasti ada yang berduka", show: true },
+      { line: "Enak menjamu selera", show: false, blank: true },
+      { line: "Jangan lupa yang tiada", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Raya Raya Raya",
+    artist: "Dolla",
+    emoji: ".",
+    tag: "baru",
+    audio: "raya-raya-raya.mp3",
+    audio2: "raya-raya-raya-ans.mp3",
+    lyrics: [
+      { line: "Yang jauh dah balik pulang", show: true },
+      { line: "Yang dekat sorak gembira", show: true },
+      { line: "Everybody nak selfie", show: true },
+      { line: "Semua busy raya OOTD", show: true },
+      { line: "Salam Aidilfitri saudara dan saudari", show: false, blank: true },
+      { line: "Meraikan Syawal indah ini", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Seloka Hari Raya",
+    artist: "Uji Rashid & Hail Amir",
+    emoji: "🌙",
+    tag: "raya",
+    audio: "seloka-hari-raya.mp3",
+    lyrics: [
+      { line: "Indahnya sungguh di hari raya", show: true },
+      { line: "Ramainya orang bersuka ria", show: true },
+      { line: "Indahnya sungguh di hari raya", show: true },
+      { line: "Ramainya orang bersuka ria", show: true },
+      { line: "Adikku manis cantik bergaya", show: false, blank: true },
+      { line: "Bolehkah abang ikut bersama", show: false, blank: true },
+      { line: "Adikku manis cantik bergaya", show: false, blank: true },
+      { line: "Bolehkah abang ikut bersama", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Suasana Riang Di Hari Raya",
+    artist: "Junainah M. Amin",
+    emoji: "💫",
+    tag: "nostalgia",
+    audio: "suasana-riang-di-hari-raya.mp3",
+    lyrics: [
+      { line: "Kalau sudah makan jalan ramai-ramai", show: true },
+      { line: "Bersama kawanmu semua", show: true },
+      { line: "Bersalam-salaman bermaaf-maafan", show: false, blank: true },
+      { line: "Di hari bahagia ini", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Meriah Lain Macam",
+    artist: "Hael Husaini & Nadeera",
+    emoji: ".",
+    tag: "baru",
+    audio: "meriah-lain-macam.mp3",
+    audio2: "meriah-lain-macam-ans.mp3",
+    lyrics: [
+      { line: "Sayang", show: true },
+      { line: "Ya, iya, sayang", show: true },
+      { line: "Maaf zahir dan batin sayang", show: true },
+      { line: "Saya pun sama", show: true },
+      { line: "Janji sambut Syawal bersama", show: false, blank: true },
+      { line: "Jumpa semua yang lama tak jumpa", show: false, blank: true },
+      { line: "Meriah lain macam", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Inang Di Aidilfitri",
+    artist: "Dato' Sudirman Hj. Arshad & Zaleha Hamid",
+    emoji: "🎋",
+    tag: "raya",
+    audio: "inang-di-aidilfitri.mp3",
+    lyrics: [
+      { line: "Sanak saudara dan kaum keluarga", show: true },
+      { line: "Datang berhimpun meriah suasana", show: true },
+      { line: "Selisih faham terhapus hendaknya", show: true },
+      { line: "Buang yang keruh ambillah yang jernih", show: true },
+      { line: "Di hari Aidilfitri", show: false, blank: true },
+      { line: "Kita bertulus hati", show: false, blank: true },
+      { line: "Di hari Aidilfitri", show: false, blank: true },
+      { line: "Kita bertulus hati", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Hari Raya Hari Bahagia",
+    artist: "Ramlah Ram",
+    emoji: "💫",
+    tag: "nostalgia",
+    audio: "hari-raya-hari-bahagia.mp3",
+    lyrics: [
+      { line: "Selamat", show: true },
+      { line: "Selamat Hari Raya", show: true },
+      { line: "Kami ucapkan pada semua", show: true },
+      { line: "Selamat", show: true },
+      { line: "Selamat Hari Raya", show: true },
+      { line: "Pada yang miskin atau yang kaya", show: true },
+      { line: "Hari yang menyatukan kita semua", show: false, blank: true },
+      { line: "Bermaaf-maafanlah sesama kita", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Bincang Raya",
+    artist: "Amira Othman & Irfan Haris",
+    emoji: ".",
+    tag: "baru",
+    audio: "bincang-raya.mp3",
+    audio2: "bincang-raya-ans.mp3",
+    lyrics: [
+      { line: "Raya mana dulu? Rumah siapa dulu?", show: true },
+      { line: "Saya pun tak tahu, lupa nak bincang", show: true },
+      { line: "Belah saya dulu, bolehkah begitu?", show: true },
+      { line: "Ramai yang dah rindu, bolehlah sayang", show: true },
+      { line: "Bolehlah sayang", show: false, blank: true },
+      { line: "Bolehlah sayang", show: false, blank: true },
+      { line: "Tak bolehlah sayang", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Kepulangan Yang Di Nanti",
+    artist: "Aman Shah",
+    emoji: "🏘️",
+    tag: "raya",
+    audio: "kepulangan-yang-di-nanti.mp3",
+    lyrics: [
+      { line: "Terbayang senyuman di wajah nan sepi", show: true },
+      { line: "Pulangnya anakmu di pagi yang murni",  show: true },
+      { line: "Kasihmu seharum kasturi", show: false, blank: true },
+      { line: "Melambai anakmu kembali", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Suasana Hari Raya",
+    artist: "Anuar Zain & Ellina",
+    emoji: "💖",
+    tag: "raya",
+    audio: "suasana-hari-raya-anuar-ellina.mp3",
+    lyrics: [
+      { line: "Kuih dan muih beraneka macam", show: true },
+      { line: "Makanlah jangan hanya dipandang", show: true },
+      { line: "Ketupat rendang sila nikmati kawan", show: true },
+      { line: "Penat memasak malam ke pagi", show: true },
+      { line: "Wajik dan dodol jangan lupakan", show: false, blank: true },
+      { line: "Peninggalan nenek zaman berzaman", show: false, blank: true },
+      { line: "Asyik bersembang pakcik dan makcik", show: false, blank: true },
+      { line: "Hai duit raya lupa nak diberi", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Ketipak Ketipung Raya",
+    artist: "Aziz Harun & Aishah Retno",
+    emoji: ".",
+    tag: "baru",
+    audio: "ketipak-ketipung-raya.mp3",
+    audio2: "ketipak-ketipung-raya-ans.mp3",
+    lyrics: [
+      { line: "Jikalau dinda ingin beraya", show: true },
+      { line: "Mari bertandang ke rumah kanda", show: true },
+      { line: "Ketipak ketipung, sayang", show: false, blank: true },
+      { line: "Duit raya still dapat ke, sayang?", show: false, blank: true },
+      { line: "Kalau sudah, mari beraya", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Pulang Di Hari Raya",
+    artist: "Noorkumalasari",
+    emoji: "🏡",
+    tag: "raya",
+    audio: "pulang-di-hari-raya.mp3",
+    lyrics: [
+      { line: "Di hari mulia ini", show: true },
+      { line: "Kususun sepuluh jari", show: true },
+      { line: "Ku kini telah kembali", show: false, blank: true },
+      { line: "Padamu yang menanti", show: false, blank: true },
+    ]
+  },  
+  {
+    title: "Ku Pohon Restu Ayah dan Bonda",
+    artist: "Mamat Exist",
+    emoji: "🙏🏻",
+    tag: "raya",
+    audio: "ku-pohon-restu-ayah-dan-bonda.mp3",
+    lyrics: [
+      { line: "'Kan kusujud di kaki mu", show: true },
+      { line: "Bila kita bertemu", show: true },
+      { line: "'Kan kucium tanganmu", show: true },
+      { line: "Kupohon restumu", show: false, blank: true },
+      { line: "Oh maafkan daku kesalahan diriku", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Hari Raya",
+    artist: "Najwa Latif, iamNeeta",
+    emoji: ".",
+    tag: "baru",
+    audio: "hari-raya.mp3",
+    audio2: "hari-raya-ans.mp3",
+    lyrics: [
+      { line: "Hari raya", show: true },
+      { line: "Genap sudah sebulan berpuasa", show: true },
+      { line: "Hari raya", show: true },
+      { line: "Mari ramai-ramai kita gembira", show: true },
+      { line: "Di hari raya", show: false, blank: true },
+      { line: "Kita saling bermaaf-maafan", show: false, blank: true },
+      { line: "Hari raya", show: false, blank: true },
+      { line: "Mari ramai-ramai jemput ke rumah", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Suasana Hari Raya",
+    artist: "Sharifah Aini",
+    emoji: "✨",
+    tag: "nostalgia",
+    audio: "suasana-hari-raya-sharifah-aini.mp3",
+    lyrics: [
+      { line: "Rasalah ketupat ini", show: true },
+      { line: "Dengan rendangnya sekali", show: true },
+      { line: "Sudilah rasa kuihku", show: true },
+      { line: "Pilihlah yang mana satu", show: true },
+      { line: "Hai di hari begini", show: false, blank: true },
+      { line: "Kita menjamu selera", show: false, blank: true },
+      { line: "Kita bermaaf-maafan", show: false, blank: true },
+      { line: "Di suasana hari raya", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Balik Kampung",
+    artist: "Dato' Sudirman Hj. Arshad",
+    emoji: "🚗",
+    tag: "raya",
+    audio: "balik-kampung.mp3",
+    lyrics: [
+      { line: "Ho ho ho balik kampung", show: true },
+      { line: "Ho ho ho balik kampung", show: true },
+      { line: "Ho ho ho balik kampung", show: true },
+      { line: "Hati girang", show: true },
+      { line: "Terbayang wajah-wajah yang kusayang", show: false, blank: true },
+      { line: "Satu-satu tersemat di kalbu", show: false, blank: true },
+      { line: "Pasti terubat rindu di hati", show: false, blank: true },
+      { line: "Menyambut kepulangan ku nanti", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Raya Mana",
+    artist: "Nabila Razali",
+    emoji: ".",
+    tag: "baru",
+    audio: "raya-mana.mp3",
+    audio2: "raya-mana-ans.mp3",
+    lyrics: [
+      { line: "Nak balik, nak balik kampung", show: true },
+      { line: "Kampung siapa dulu?", show: true },
+      { line: "Nak balik, nak balik kampung", show: true },
+      { line: "Janji aku bersamamu", show: true },
+      { line: "Raya, raya, tak kisah kampung siapa dulu", show: false, blank: true },
+      { line: "Raya, raya, janji aku bersamamu", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Raya",
+    artist: "Jalil Hamid",
+    emoji: "🪔",
+    tag: "raya",
+    audio: "raya-jalil-hamid.mp3",
+    lyrics: [
+      { line: "Kalau banyak harta benda", show: true },
+      { line: "Orang itu kaya raya", show: true },
+      { line: "Kalau tempat lalu kereta", show: true },
+      { line: "Itulah jalan raya", show: true },
+      { line: "Hentian bas ibu kota", show: false, blank: true },
+      { line: "Itu di Puduraya", show: false, blank: true },
+      { line: "Di tengah bandaraya", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Aidilfitri",
+    artist: "Sanisah Huri",
+    emoji: "💸",
+    tag: "raya",
+    audio: "aidilfitri.mp3",
+    lyrics: [
+      { line: "Kini tiba masanya berhari raya", show: true },
+      { line: "Muslimin dan muslimat sembahyang bersama", show: true },
+      { line: "Menyembahkan diri pada Yang Kuasa", show: false, blank: true },
+      { line: "Bermaaf dan maafan di antara kita", show: false, blank: true },
+    ]
+  },
+  {
+    title: "Cahaya Aidilfitri",
+    artist: "Black Dog Bone",
+    emoji: "✨",
+    tag: "raya",
+    audio: "cahaya-aidilfitri.mp3",
+    lyrics: [
+      { line: "Siapakah yang sudi", show: true },
+      { line: "Menghulurkan simpati", show: true },
+      { line: "Kepada nasibku ini", show: true },
+      { line: "Agar dapat kurasa", show: false, blank: true },
+      { line: "Nikmat di hari raya", show: false, blank: true },
+      { line: "Seperti insan yang lain", show: false, blank: true },
+    ]
+  },  
+];
+
+// State
+let currentSong = null;
+let hideTimeout = null; // replaces gameInterval — just one 3s timeout
+const audioPlayer = document.getElementById('audioPlayer');
+
+// Song grid 
+function buildSongGrid() {
+  const grid = document.getElementById('songGrid');
+  grid.innerHTML = '';
+  SONGS.forEach((song, i) => {
+    const card = document.createElement('div');
+    card.className = 'song-card';
+    card.id = `song-${i}`;
+    card.onclick = () => selectSong(i);
+    card.innerHTML = `
+      <span class="song-emoji">${song.emoji}</span>
+      <div class="song-title">${song.title}</div>
+      <div class="song-artist">${song.artist}</div>
+      <span class="song-tag ${song.tag === 'raya' ? 'tag-raya' : song.tag === 'baru' ? 'tag-baru' : 'tag-nostalgia'}">
+        ${song.tag === 'raya' ? '🌙 Hari Raya' : song.tag === 'baru' ? '🆕 Lagu Baru' : '📼 Nostalgia'}
+      </span>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function selectSong(index) {
+  document.querySelectorAll('.song-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(`song-${index}`).classList.add('selected');
+  currentSong = SONGS[index];
+  document.getElementById('selectedBanner').style.display = 'block';
+  document.getElementById('selectedName').textContent = currentSong.title + ' — ' + currentSong.artist;
+  spawnNotes();
+}
+
+// Shuffle
+function shuffleSong() {
+  const btn = document.getElementById('shuffleBtn');
+  btn.classList.add('spinning');
+  setTimeout(() => btn.classList.remove('spinning'), 500);
+
+  let count = 0;
+  const total = 25;
+  const flashInterval = setInterval(() => {
+    const r = Math.floor(Math.random() * SONGS.length);
+    document.querySelectorAll('.song-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById(`song-${r}`).classList.add('selected');
+    count++;
+    if (count >= total) {
+      clearInterval(flashInterval);
+      const finalIdx = Math.floor(Math.random() * SONGS.length);
+      document.querySelectorAll('.song-card').forEach(c => c.classList.remove('selected'));
+      document.getElementById(`song-${finalIdx}`).classList.add('selected');
+      currentSong = SONGS[finalIdx];
+      document.getElementById('selectedBanner').style.display = 'block';
+      document.getElementById('selectedName').textContent = currentSong.title + ' — ' + currentSong.artist;
+      setTimeout(() => startGame(), 400);
+    }
+  }, 80);
+}
+
+// Countdown
+function startCountdown(callback) {
+  const overlay = document.getElementById('countdownOverlay');
+  const numEl   = document.getElementById('countdownNumber');
+  const nameEl  = document.getElementById('countdownSongName');
+
+  nameEl.textContent = currentSong.title + ' — ' + currentSong.artist;
+  let count = 3;
+  numEl.textContent = count;
+  overlay.classList.add('visible');
+
+  const tick = setInterval(() => {
+    count--;
+    if (count <= 0) {
+      clearInterval(tick);
+      overlay.classList.remove('visible');
+      callback();
+    } else {
+      numEl.style.animation = 'none';
+      numEl.offsetHeight; // force reflow
+      numEl.style.animation = '';
+      numEl.textContent = count;
+    }
+  }, 1000);
+}
+
+// Audio
+function playAudio(filename) {
+  if (!filename) return;
+  audioPlayer.src = filename;
+  audioPlayer.volume = document.getElementById('volumeSlider').value;
+  audioPlayer.currentTime = 0;
+  audioPlayer.play().catch(err => console.warn('Audio play failed:', err));
+  document.getElementById('audioStatus').textContent = currentSong.title;
+}
+
+function stopAudio() {
+  audioPlayer.pause();
+  audioPlayer.src = '';
+  document.getElementById('audioStatus').textContent = '—';
+}
+
+// Game flow
+function startGame() {
+  document.getElementById('song-list-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  document.getElementById('revealBtn').disabled = true;
+  document.getElementById('albumEmoji').textContent = currentSong.emoji;
+  document.getElementById('trackTitle').textContent = currentSong.title;
+  document.getElementById('trackArtist').textContent = currentSong.artist;
+
+  document.getElementById('singPrompt').classList.remove('visible');
+  document.getElementById('lyricsDisplay').innerHTML = '';
+  updatePhaseLabel('show');
+
+  if (hideTimeout) clearTimeout(hideTimeout);
+  stopAudio();
+
+  // 3-sec countdown → MP3 plays + all show-lyrics appear instantly
+  startCountdown(() => {
+    playAudio(currentSong.audio);
+    showAllLyrics();
+
+    // After 3 more seconds, blank out the hidden lines
+    hideTimeout = setTimeout(() => {
+      switchToSingPhase();
+    }, 8000);
+  });
+}
+
+// Show all "show: true" lyrics at once
+function showAllLyrics() {
+  const display   = document.getElementById('lyricsDisplay');
+  const showLines = currentSong.lyrics.filter(l => l.show);
+  let html = '';
+  showLines.forEach(lyric => {
+    html += `<div class="lyric-line">${lyric.line}</div>`;
+  });
+  display.innerHTML = html;
+}
+
+// Switch to blank/sing phase
+function switchToSingPhase() {
+  updatePhaseLabel('hide');
+
+  const display = document.getElementById('lyricsDisplay');
+  let html = '';
+  currentSong.lyrics.forEach(lyric => {
+    if (lyric.show) {
+      html += `<div class="lyric-line">${lyric.line}</div>`;
+    } else if (lyric.blank) {
+      const blanked = lyric.line.split(' ')
+        .map(w => `<span class="lyric-blank ${w.length > 6 ? 'long' : ''}"></span>`)
+        .join(' ');
+      html += `<div class="lyric-line">🎵 ${blanked}</div>`;
+    }
+  });
+  display.innerHTML = html;
+
+  setTimeout(() => {
+    document.getElementById('singPrompt').classList.add('visible');
+    spawnStars();
+  }, 300);
+}
+
+function revealLyrics() {
+  if (document.getElementById('revealBtn').disabled) return;
+
+  const display = document.getElementById('lyricsDisplay');
+  let html = '';
+  currentSong.lyrics.forEach(lyric => {
+    if (lyric.show) {
+      html += `<div class="lyric-line">${lyric.line}</div>`;
+    } else if (lyric.blank) {
+      html += `<div class="lyric-line">🎤 ${lyric.line}</div>`;
+    }
+  });
+  display.innerHTML = html;
+
+  document.getElementById('singPrompt').classList.remove('visible');
+
+  const el = document.getElementById('phaseLabel');
+  el.className = 'phase-label revealed';
+  el.innerHTML = '<span class="phase-dot"></span> Lyrics Revealed';
+
+  document.getElementById('revealBtn').disabled = true;
+
+  playAudio(currentSong.audio2);
+}
+
+function updatePhaseLabel(phase) {
+  const el  = document.getElementById('phaseLabel');
+  const btn = document.getElementById('revealBtn');
+  if (phase === 'show') {
+    el.className = 'phase-label show';
+    el.innerHTML = '<span class="phase-dot"></span> Lyrics Shown';
+    btn.disabled = true;
+  } else {
+    el.className = 'phase-label hide';
+    el.innerHTML = '<span class="phase-dot"></span> Your Turn to Sing!';
+    btn.disabled = false;
+  }
+}
+
+function backToList() {
+  if (hideTimeout) clearTimeout(hideTimeout);
+  stopAudio();
+  document.getElementById('game-screen').style.display      = 'none';
+  document.getElementById('song-list-screen').style.display = 'block';
+}
+
+function replayGame() {
+  if (hideTimeout) clearTimeout(hideTimeout);
+  startGame();
+}
+
+function nextSong() {
+  if (hideTimeout) clearTimeout(hideTimeout);
+  const currentIdx = SONGS.indexOf(currentSong);
+  const nextIdx = (currentIdx + 1) % SONGS.length;
+  currentSong = SONGS[nextIdx];
+  startGame();
+}
+
+// Effects
+function spawnNotes() {
+  const notes = ['🎵','🎶','🎤','✨'];
+  for (let i = 0; i < 5; i++) {
+    const n = document.createElement('div');
+    n.className = 'note-float';
+    n.textContent = notes[Math.floor(Math.random() * notes.length)];
+    n.style.left = (20 + Math.random() * 60) + 'vw';
+    n.style.bottom = '20vh';
+    n.style.animationDelay = (i * 0.15) + 's';
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 2200);
+  }
+}
+
+function spawnStars() {
+  const overlay = document.getElementById('starsOverlay');
+  overlay.style.display = 'block';
+  const emojis = ['⭐','🌟','✨','🎉','🎊','🏮'];
+  for (let i = 0; i < 20; i++) {
+    const s = document.createElement('div');
+    s.className = 'star-particle';
+    s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.top  = Math.random() * 80  + 'vh';
+    s.style.animationDelay = Math.random() * 0.8 + 's';
+    overlay.appendChild(s);
+  }
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    overlay.innerHTML = '';
+  }, 2500);
+}
+
+// Init
+buildSongGrid();
+</script>
+</body>
+</html>
